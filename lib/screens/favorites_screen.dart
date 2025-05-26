@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:mi_primer_proyecto/network/api_popular.dart';
-import 'package:mi_primer_proyecto/screens/detail_popular_movie.dart';
+import 'package:http/http.dart' as http;
 import 'package:mi_primer_proyecto/models/favorites_service.dart';
 import 'package:mi_primer_proyecto/models/popular_model.dart';
 
-  class FavoritesScreen extends StatefulWidget {
+class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
   @override
@@ -13,7 +13,6 @@ import 'package:mi_primer_proyecto/models/popular_model.dart';
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final FavoritesService _favoritesService = FavoritesService();
-  final ApiPopular _api = ApiPopular();
 
   List<PopularModel> favoriteMovies = [];
 
@@ -24,18 +23,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> loadFavorites() async {
-  final allMovies = await _api.getPopularMovies();
-  final favorites = _favoritesService.favorites;
+    try {
+      // Obtener favoritos desde la API usando el método que debes implementar en FavoritesService
+      final favoritesFromApi = await _favoritesService.fetchFavoritesFromApi();
 
-  // Filtra solo las películas cuyos ID están en la lista de favoritos
-  final filtered = allMovies.where((movie) =>
-    favorites.any((fav) => fav.id == movie.id)
-  ).toList();
-
-  setState(() {
-    favoriteMovies = filtered;
-  });
-}
+      setState(() {
+        favoriteMovies = favoritesFromApi;
+      });
+    } catch (e) {
+      print('Error al cargar favoritos: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -11,10 +11,6 @@ class PopularModel {
   double voteAverage;
   int voteCount;
 
-  /*PopularModel(String override){
-    this.overview = override;
-  }*/
-
   PopularModel({
     required this.backdropPath,
     required this.id,
@@ -29,21 +25,41 @@ class PopularModel {
     required this.voteCount,
   });
 
-  factory PopularModel.fromMap(Map<String,dynamic> movie){
+  /// Convierte un JSON a objeto PopularModel
+  factory PopularModel.fromJson(Map<String, dynamic> json) {
     return PopularModel(
-      backdropPath: 'https://image.tmdb.org/t/p/w500/${movie['backdrop_path']}' 
-      ?? 'https://img.freepik.com/free-vector/oops-404-error-with-broken-robot-concept-illustration_114360-5529.jpg', 
-      id: movie['id'], 
-      originalLanguage: movie['original_language'], 
-      originalTitle: movie['original_title'], 
-      overview: movie['overview'], 
-      popularity: movie['popularity'], 
-      posterPath: movie['poster_path'], 
-      releaseDate: movie['release_date'], 
-      title: movie['title'], 
-      voteAverage: movie['vote_average'], 
-      voteCount: movie['vote_count']
+      backdropPath: json['backdrop_path'] != null
+          ? 'https://image.tmdb.org/t/p/w500/${json['backdrop_path']}'
+          : 'https://img.freepik.com/free-vector/oops-404-error-with-broken-robot-concept-illustration_114360-5529.jpg',
+      id: json['id'],
+      originalLanguage: json['original_language'] ?? '',
+      originalTitle: json['original_title'] ?? '',
+      overview: json['overview'] ?? '',
+      popularity: (json['popularity'] ?? 0).toDouble(),
+      posterPath: json['poster_path'] != null
+          ? 'https://image.tmdb.org/t/p/w500/${json['poster_path']}'
+          : '',
+      releaseDate: json['release_date'] ?? '',
+      title: json['title'] ?? '',
+      voteAverage: (json['vote_average'] ?? 0).toDouble(),
+      voteCount: json['vote_count'] ?? 0,
     );
   }
 
+  /// Convierte un objeto PopularModel a JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'backdrop_path': backdropPath,
+      'id': id,
+      'original_language': originalLanguage,
+      'original_title': originalTitle,
+      'overview': overview,
+      'popularity': popularity,
+      'poster_path': posterPath,
+      'release_date': releaseDate,
+      'title': title,
+      'vote_average': voteAverage,
+      'vote_count': voteCount,
+    };
+  }
 }
