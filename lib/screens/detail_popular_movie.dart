@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:mi_primer_proyecto/models/popular_model.dart';
 import 'package:mi_primer_proyecto/network/api_popular.dart';
+import 'package:mi_primer_proyecto/models/favorite_service.dart';
 
 class DetailPopularMovie extends StatefulWidget {
   const DetailPopularMovie({super.key});
@@ -13,13 +14,13 @@ class DetailPopularMovie extends StatefulWidget {
 class _DetailPopularMovieState extends State<DetailPopularMovie> {
   late PopularModel movie;
   String? trailerKey;
+
   YoutubePlayerController? _youtubeController;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     movie = ModalRoute.of(context)!.settings.arguments as PopularModel;
-
     _loadTrailer();
   }
 
@@ -49,6 +50,8 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
 
   @override
   Widget build(BuildContext context) {
+    bool isFavorite = FavoriteService.isFavorite(movie);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(movie.title),
@@ -56,7 +59,64 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(movie.backdropPath),
+            // 👇 Aquí insertamos tu Stack con la imagen y el botón de favoritos
+            Stack(
+              children: [
+                Image.network(
+                  movie.backdropPath,
+                  width: double.infinity,
+                  height: 230,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error),
+                ),
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      final wasFavorite = FavoriteService.isFavorite(movie);
+                      setState(() {
+                        FavoriteService.toggleFavorite(movie);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(wasFavorite
+                              ? 'Película eliminada de favoritos'
+                              : 'Película agregada a favoritos'),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          margin: const EdgeInsets.all(16),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 9, 9, 9).withOpacity(0.9),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: const Color.fromARGB(255, 12, 226, 48),
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // 👇 Resto del contenido de detalle
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
