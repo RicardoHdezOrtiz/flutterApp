@@ -42,6 +42,7 @@ dependencies:
   path_provider: ^2.1.5
   youtube_player_flutter: ^8.1.1
   url_launcher: ^6.1.7
+  cached_network_image: ^3.2.3
   ##Se alinea para que funcione los flutter
 
 dev_dependencies:

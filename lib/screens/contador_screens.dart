@@ -15,7 +15,7 @@ class _ContadorScreenState extends State<ContadorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mi primer App', style: TextStyle(color: Color(0xFFFFFFFF)),),
-        backgroundColor: const Color.fromARGB(255, 136, 19, 19),
+        backgroundColor: Colors.black,
       ),
       body: Center(
         child: Text('Valor del Contador $contador', style: TextStyle(fontSize: 25, color: Color.fromARGB(219, 242, 126, 24)),)
