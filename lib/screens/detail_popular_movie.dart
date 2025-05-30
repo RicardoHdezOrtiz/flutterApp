@@ -95,7 +95,7 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 9, 9, 9).withOpacity(0.9),
+                        color: Colors.white.withOpacity(0.9),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -108,7 +108,7 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                       padding: const EdgeInsets.all(8),
                       child: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: const Color.fromARGB(255, 12, 226, 48),
+                        color: const Color.fromARGB(255, 82, 255, 111),
                         size: 28,
                       ),
                     ),

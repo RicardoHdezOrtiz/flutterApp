@@ -29,19 +29,29 @@ class DashboardScreen extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/reto');
             },
-            icon: Icons.home, label: 'Challenge App'
+            icon: Icons.home, 
+            label: 'Challenge App'
           ),
           SidebarXItem(
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/api');
             },
-            icon: Icons.movie, label: 'Popular Movies'
-          )
+            icon: Icons.movie, 
+            label: 'Popular Movies'
+          ),
+          SidebarXItem(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/favorites');
+            },
+            icon: Icons.favorite, 
+            label: 'Favorite Movies'
+          ),
         ],
       ),
       appBar: AppBar(
-        title: Text('Panel de control'),
+        title: const Text('Panel de control'),
       ),
       body: HawkFabMenu(
         icon: AnimatedIcons.menu_arrow,

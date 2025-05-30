@@ -7,6 +7,7 @@ import 'package:mi_primer_proyecto/screens/login_screen.dart';
 import 'package:mi_primer_proyecto/screens/popular_screen.dart';
 import 'package:mi_primer_proyecto/utils/global_values.dart';
 import 'package:mi_primer_proyecto/utils/theme_settings.dart';
+import 'package:mi_primer_proyecto/screens/favorites_movies.dart';
 
 void main() => runApp(const MyApp());
 
@@ -25,7 +26,9 @@ class MyApp extends StatelessWidget {
             "/dash" : (context) => const DashboardScreen(),
             "/reto" : (context) => const ChallengeScreen(),
             "/api" : (context) => const PopularScreen(),
-            "/detail" : (context) => const DetailPopularMovie()
+            "/detail" : (context) => const DetailPopularMovie(),
+            "/favorites" : (context) => const FavoritesMovies(), 
+
           },
         );
       }
