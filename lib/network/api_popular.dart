@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mi_primer_proyecto/models/popular_model.dart';
+import 'package:mi_primer_proyecto/utils/actor_model.dart';
 
 class ApiPopular {
   final Dio dio = Dio();
@@ -34,6 +35,20 @@ class ApiPopular {
     } catch (e) {
       print('Error en getTrailer: $e');
       return null;
+    }
+  }
+
+  /// Obtener lista de actores (cast) de una película por su ID
+  Future<List<ActorModel>> getMovieCast(int movieId) async {
+    try {
+      final url = '$_baseUrl/movie/$movieId/credits?api_key=$_apiKey&language=es-MX';
+      final response = await dio.get(url);
+      final castList = response.data['cast'] as List;
+
+      return castList.map((actor) => ActorModel.fromMap(actor)).toList();
+    } catch (e) {
+      print('Error en getMovieCast: $e');
+      return [];
     }
   }
 }
