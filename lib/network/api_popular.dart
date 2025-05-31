@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mi_primer_proyecto/models/popular_model.dart';
 import 'package:mi_primer_proyecto/utils/actor_model.dart';
+import 'package:mi_primer_proyecto/utils/actor_model.dart';
 
 class ApiPopular {
   final Dio dio = Dio();

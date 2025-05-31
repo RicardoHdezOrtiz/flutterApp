@@ -6,7 +6,6 @@ import 'package:mi_primer_proyecto/network/api_popular.dart';
 import 'package:mi_primer_proyecto/models/favorite_service.dart';
 import 'package:mi_primer_proyecto/utils/star_rating.dart';
 import 'package:mi_primer_proyecto/utils/actor_model.dart';
-import 'package:mi_primer_proyecto/models/actor_service.dart';
 
 class DetailPopularMovie extends StatefulWidget {
   const DetailPopularMovie({super.key});
@@ -49,7 +48,7 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
   }
 
   Future<void> _loadCast() async {
-    final cast = await getMovieCast(movie.id);
+    final cast = await ApiPopular().getMovieCast(movie.id);
     setState(() {
       _cast = cast;
       _isLoadingCast = false;
@@ -91,64 +90,74 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Stack(
-                    children: [
-                      Image.network(
-                        movie.backdropPath,
-                        width: double.infinity,
-                        height: 230,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.error),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              FavoriteService.toggleFavorite(movie);
-                            });
-
-                            final isNowFavorite = FavoriteService.isFavorite(movie);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(isNowFavorite
-                                    ? 'Película agregada a favoritos'
-                                    : 'Película eliminada de favoritos'),
-                                duration: const Duration(seconds: 2),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                margin: const EdgeInsets.all(16),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 4, 4, 4).withOpacity(0.9),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(8),
-                            child: Icon(
-                              FavoriteService.isFavorite(movie)
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: const Color.fromARGB(255, 82, 255, 111),
-                              size: 28,
+                  // Aquí usamos Stack para el Hero y el botón favorito juntos
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Stack(
+                      children: [
+                        Hero(
+                          tag: 'poster-${movie.id}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                              width: double.infinity,
+                              height: 230,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.error),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                FavoriteService.toggleFavorite(movie);
+                              });
+
+                              final isNowFavorite = FavoriteService.isFavorite(movie);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(isNowFavorite
+                                      ? 'Película agregada a favoritos'
+                                      : 'Película eliminada de favoritos'),
+                                  duration: const Duration(seconds: 2),
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  margin: const EdgeInsets.all(16),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 4, 4, 4).withOpacity(0.9),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                FavoriteService.isFavorite(movie)
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: const Color.fromARGB(255, 82, 255, 111),
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   // ⭐ ESTRELLAS DE RATING
@@ -173,7 +182,8 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
                       'Reparto',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -200,7 +210,8 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                                               width: 60,
                                               fit: BoxFit.cover,
                                             )
-                                          : const Icon(Icons.person, size: 60, color: Colors.white),
+                                          : const Icon(Icons.person,
+                                              size: 60, color: Colors.white),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
@@ -208,7 +219,8 @@ class _DetailPopularMovieState extends State<DetailPopularMovie> {
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                                      style: const TextStyle(
+                                          fontSize: 12, color: Colors.white),
                                     ),
                                   ],
                                 ),
